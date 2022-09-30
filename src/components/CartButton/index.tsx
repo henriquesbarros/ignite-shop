@@ -1,9 +1,10 @@
+import { ComponentProps } from "@stitches/react";
 import { Handbag } from "phosphor-react"
 import { CartButtonContainer } from "./styles"
 
-interface CartButtonProps {
-	quantity: number
-}
+type CartButtonProps = ComponentProps<typeof CartButtonContainer> & {
+  quantity?: number;
+};
 
 export const CartButton = ({quantity = 0, ...rest}: CartButtonProps) => {
 	return (
