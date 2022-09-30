@@ -5,9 +5,9 @@ interface CartButtonProps {
 	quantity: number
 }
 
-export const CartButton = ({quantity = 0}: CartButtonProps) => {
+export const CartButton = ({quantity = 0, ...rest}: CartButtonProps) => {
 	return (
-		<CartButtonContainer>
+		<CartButtonContainer {...rest}>
       {quantity > 0 && <span>{quantity}</span>}
       <Handbag weight="bold" size={24} />			
 		</CartButtonContainer>
