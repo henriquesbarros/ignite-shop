@@ -8,23 +8,27 @@ import { stripe } from '../lib/stripe'
 
 import { HomeContainer, Product } from '../styles/pages/home'
 import { CartButton } from '../components/CartButton'
+import { MouseEvent, useContext } from 'react'
+import { CartContext, IProduct } from '../contexts/CartContext'
 
 interface HomeProps {
-	products: {
-		id: string;
-		name: string;
-		imageUrl: string;
-		price: string;
-	}[]
+  products: IProduct[];
 }
 
 export default function Home({ products }: HomeProps) {
+	const {addToCart = () => {}, checkIfProductAlreadyExists = () => false} = useContext(CartContext)
+
 	const [sliderRef] = useKeenSlider({
 		slides: {
 			perView: 3,
 			spacing: 48,
 		}
 	})
+
+	function handleAddToCart(event: MouseEvent<HTMLButtonElement>, product: IProduct) {
+		event.preventDefault()
+		addToCart(product)
+	}
 
   return (
     <>
@@ -34,7 +38,7 @@ export default function Home({ products }: HomeProps) {
 			<HomeContainer ref={sliderRef} className="keen-slider">
 				{products.map(product => {
 					return (
-						<Link key={product.id} href={`/product/${product.id}`} prefetch={false}>
+						<Link key={product.id} href={`/product/${product.id}`} prefetch={false} passHref>
 							<Product
 								className="keen-slider__slide"
 							>
@@ -45,7 +49,12 @@ export default function Home({ products }: HomeProps) {
 										<strong>{product.name}</strong>
 										<span>{product.price}</span>
 									</div>
-									<CartButton size="large" color="green"/>
+									<CartButton
+										onClick={event => handleAddToCart(event, product)}
+										disabled={checkIfProductAlreadyExists(product.id)}
+										size="large" 
+										color="green" 
+									/>
 								</footer>
 							</Product>
 						</Link>
@@ -72,6 +81,9 @@ export const getStaticProps: GetStaticProps = async () => {
 				style: 'currency',
 				currency: 'BRL'
 			}).format(price.unit_amount / 100),
+			numberPrice: price.unit_amount / 100,
+			description: product.description,
+			defaultPriceId: price.id
 		}
 	})
 

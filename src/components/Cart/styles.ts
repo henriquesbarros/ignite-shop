@@ -134,10 +134,15 @@ export const ContinueToPaymentButton = styled("button", {
 	fontSize: "$md",
 	borderRadius: 8,
 	letterSpacing: 1,
-	cursor: "pointer",
 	transition: "0.2s",
+	cursor: "pointer",
 
-	"&:hover": {
+	"&:disabled": {
+		cursor: "not-allowed",
+		opacity: 0.6
+	},
+
+	"&:not(:disabled):hover": {
 		background: "$green300",
 	}
 })
